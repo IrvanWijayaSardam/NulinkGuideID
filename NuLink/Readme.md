@@ -1,16 +1,13 @@
-# NuLink Testnet Katılım Rehberi
+# NuLink Testnet Guide
 
 ![NuLinklogo](https://user-images.githubusercontent.com/107190154/190390683-f45a307d-73a1-476b-8216-f24f6ddff618.png)
 
-**Merhaba, arkadaşar. NuLink testneti için bir rehber hazırladım. Bu rehberle tüm nulink test sürecinde yapmanız gerekenleri yapmış olacaksınız.**
 
-**Lütfen yazılanları dikkatle okuyunuz. Atladığınız bir komut size hata aldıracaktır.**
 
-**En hata ya da hiç hatasız kurmak istiyorsanız, her adımı dikkatle yapın.**
+**Lakukan setiap langkah dengan hati-hati jika Anda menginginkan penginstalan yang paling bebas kesalahan atau bebas kesalahan**
 
-**Hepinize kolay gelsin..**
 
-<h1 align="center">Kurulum</h1>
+<h1 align="center">Spesifikasi Minimum</h1>
 
 ### Minimum Gereksinimler
 
@@ -18,22 +15,22 @@
 |-----------------|----------|----------|
 |2-4 CPU|   4GB    | 30GB    |
 
-**Öncelikle bize lazım olan 9151 portumuzu açalım.**
+**Buka port 9151 Menggunakan command berikut**
 ```
 sudo su
 sudo ufw allow 9151
 ```
-## Linux sistem güncellemesi yapıyoruz.
+## Update Sistem Linux.
 ```
 sudo apt-get update && apt-get upgrade -y
 ```
 
-## Kütüphane kurulumunu yapıyoruz
+## Instalasi library yang dibutuhkan 
 ```
 sudo apt-get -y install libssl-dev && apt-get -y install cmake build-essential git wget jq make gcc
 ```
 
-Bize gerekli olan dosyayı indiriyoruz ve ayarları yapıp bir worker hesabı oluşturuyoruz.
+Download file worker
 ```
 wget https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.10.24-972007a5.tar.gz
 
@@ -43,60 +40,59 @@ cd geth-linux-amd64-1.10.24-972007a5/
 
 ./geth account new --keystore ./keystore
 ```
-Şifre oluşturuyoruz. Bu kısımda şifreyi yazdıktan sonra bir kez daha aynı şifreyi yazıyorsunuz ve şifre oluşturuluyor.
-> Çıktı şöyle görünecek burada size bir key verecek, onu not etmeyi unutmayın. 
+Masukkan kata sandi anda , dan ketikkan 1x lagi untuk konfirmasi
+> Contoh Output
 > 
 ![nununu](https://user-images.githubusercontent.com/107190154/190369550-1ef68ab9-33d3-49ec-954e-0dd4b50173fe.png)
 
-### Şimdi devam edelim, kuruluma
+### Lanjut proses instalasi
 ```
 cd /root
 ```
->Docker'ı Yüklüyoruz.
+>Install docker
 ```
 sudo apt install docker.io
 ```
->Docker'ı başlatalım.
+>Nyalakan docker
 ```
 sudo systemctl enable --now docker
 ```
-NuLink İmage dosyasını çekelim.
->İndirme işlemi yapacağı için biraz bekleyelim
+Download image nulink pada docker.
+>Waiting
 ```
 docker pull nulink/nulink:latest
 ```
-### nulink adında bir dosya oluşturuyoruz
+### masuk direktori root dan buat folder nulink
 ```
 cd /root
 mkdir nulink
 ```
 
-**Burada `Path of the secret key file` yazan kısımda gördüğünüz kısmı alıp `cp` den sonraki kısma yapıştırıyorsunuz ve sonuna `/root/nulink` ekliyorsunuz. Aşağıda örnek şeklini gösterdim.**
+**pada bagian ini , tambahkan path of secret file dan pastekan setelah `cp` dan tambahkan `/root/nulink` di bagian akhir**
 ```
- cp burayapathofthesecretkeyfileyazın /root/nulink
+ cp pastekandisini /root/nulink
 ```
-### Bu Komutu yazmayı unutmayın. Unutursanız hata alırsınız.
+### Allow port 777
  ```
  chmod -R 777 /root/nulink
 ```
 ![nunaa](https://user-images.githubusercontent.com/107190154/190372480-43c054fc-433d-47b7-bbb0-b53fca52da3f.png)
 
-<h1 align="center">Bu girmeniz gereken bir komut değildir, örnektir</h1> 
+<h1 align="center">!!!CONTOHHH!!!</h1> 
 
 ```
  cp /root/geth-linux-amd64-1.10.23-d901d853/keystore/UTC--2022-09-13T01-14-32.465358210Z--8b1819341bec211a45a2186c4d0030681ccce0ee /root/nulink
  ```
 
-### Değişkenleri ayarlayacağız
+### Set password kedalam variable
 > Burada en az 8 karakterli bir şifre seçebilirsiniz.
 ```
-export NULINK_KEYSTORE_PASSWORD=şifreniz
+export NULINK_KEYSTORE_PASSWORD=passwordanda
 
-export NULINK_OPERATOR_ETH_PASSWORD=şifreniz
+export NULINK_OPERATOR_ETH_PASSWORD=passwordanda
 ```
 
-### Bu adım, NuLink çalışan node yapılandırmasını depolar ve yalnızca bir kez çalıştırılması gerekir.
-> Düzenlememiz gereken yerler var. Aşağıda nasıl dolduracağınıza dair örnekleri yazdım.
+### Konfirgurasi Node
 ```
 docker run -it --rm \
 -p 9151:9151 \
@@ -112,34 +108,34 @@ nulink/nulink nulink ursula init \
 --operator-address publicadresiniziyazın \
 --max-gas-price 100
 ```
-**signer keystore:, `///code/.......` bu kısma az evvel yukarıda da kullandığımız `Path of the secret key file` kısmında yazan yeri kopyalayacağız ancak `UTC` yazan yerden itibaren kopyalayacağız.**
+**signer keystore:, `///code/.......` Di bagian ini, kita akan menyalin tempat yang tertulis di bagian 'Path of the secret key file' yang baru saja kita gunakan di atas, tetapi kita akan menyalinnya dari tempat di mana 'UTC' ditulis..**
 
-**Komutta şöyle görünecek;**
+**CONTOH;**
 
-Örneğin;--signer keystore:///code/UTC--2022-09-13T01-14-32.465358210Z--8b18193XXXXXXXXXXXXXXXXXXXXXXXXXe\
+Misalkan gini ;--signer keystore:///code/UTC--2022-09-13T01-14-32.465358210Z--8b18193XXXXXXXXXXXXXXXXXXXXXXXXXe\
 
-**`operator-address` yazan yere az evvel worker hesabı oluşturduğumuzda karşımıza çıkan `public address'i` yazıyoruz.**
-**Örneğin; 0x8b18193XXXXXXXXXXXXXXXXXXXXXXXXXe**
->Sarı ile işaretli yerdeki adres `operator-address` olan yere yazacağız.
+**`operator-address` masukkan `public address'i` yang telah dibuat diatas.**
+**Contoh; 0x8b18193XXXXXXXXXXXXXXXXXXXXXXXXXe**
+>tulis operator address .
 ![nununu](https://user-images.githubusercontent.com/107190154/190402707-09fb815c-2021-42af-ad5b-a13ec90dbc60.png)
 
-### Komutu düzenleyip girdikten sonra karşınıza şu şeklide bir ekran çıkacak.
+### Contoh output;
 
 ![gitnulink](https://user-images.githubusercontent.com/107190154/190388655-5c68865f-cfda-4dde-885f-56bf72b6d2f8.png)
 
-### Örnek Çıktı;
+### Contoh output;
 
-**y/N kısmına y yazıp enter diyoruz.**
+**y/N ketik Y lalu enter.**
 
-**Ardından 8 karakterli bir şifre oluşturuyoruz. Bu şifreleri bir yere not edin kaybolmasın.** 
+**Kemudian membuat katasandi** 
 
-**Şimdi karşımıza kelimelerimiz çıkacak, mavi renktedirler. Mutlaka bir yer yedekleyin. Tekrar kelimeleri görmen şansınız yok.**
+**Sekarang phrase kita akan muncul, mereka berwarna biru. Pastikan untuk membuat cadangan di suatu tempat. Anda tidak memiliki kesempatan untuk melihat phrase itu lagi.**
 
-**Ardından yine y/N sorusune y yazıp enter yapalım.**
+**Kemudian lagi, mari kita ketik y pada pertanyaan y/N dan enter.**
 
-**Açılan sayfaya az önce gelen kelimelerimizi yapıştıralım ve enter diyelim.**
+**masukan phrase kita yang baru saja datang ke halaman yang terbuka dan ucapkan enter.**
 
-**Arından Public Key ve keystore dosya dizinin yolunu gösteren bir çıktı alacağız.** 
+**Kemudian kita akan mendapatkan output yang menunjukkan path dari Public Key dan direktori file keystore.** 
 ```
 # step 1
  Detected IPv4 address (123.45.678.9) - Is this the public-facing address of Ursula? [y/N]: y
@@ -177,8 +173,8 @@ Generated configuration file at default filepath /home/circleci/.local/share/nul
 
 ![finalnu](https://user-images.githubusercontent.com/107190154/190388608-029e9da9-d664-4a0c-9c85-a149e32bfd7f.png)
 
-### Aşağıdaki komutla node'u başlatıyoruz
-> Direkt Girebilirsiniz. Size bir tx verecektir, tx verdiyse işlem başarılıdır.
+### Mulai nodes
+> Anda bisa langsung masuk. Ini akan memberi Anda tx, jika transaksi berhasil
 ```
 docker run --restart on-failure -d \
 --name ursula \
@@ -191,7 +187,7 @@ nulink/nulink nulink ursula run --no-block-until-ready
 ```
 ![txnuu](https://user-images.githubusercontent.com/107190154/190388569-c7cc262a-b3c5-4003-9b00-bb828bf6d4fd.png)
 
-### Log kontrol sağlayalım, sürekli log bakmak için komut yazmak yerine screen açalım.
+### Mari kita periksa log, mari kita buka screen daripada mengetik perintah untuk terus-menerus melihat log.
 ```
 apt install screen 
 ```
@@ -203,52 +199,52 @@ docker logs -f ursula
 ```
 ![image](https://user-images.githubusercontent.com/107190154/190395106-60cea495-64fc-47fa-b078-03248ae71e47.png)
 
-### Artık Node'umuz çalışıyor. Ancak işlemler daha bitmedi. Birkaç adım daha var.
+### Sekarang Node kami berfungsi. Namun, prosesnya belum selesai. Ada beberapa langkah lagi.
 
-### Metamask'a girelim ve şu siteye gidelim; https://test-staking.nulink.org/faucet
-**Dilerseniz cüzdanınızı metamask'a kurulum esnasında aldığımız kelimelerle import edin, ya da herhangi bir cüzdanla işleme devam edebilirsiniz.**
-### Metamaskta BSC test ağına geçelim. (Siteye bağlanmaya çalıştığınızda kendi geçiş yapıyor yapmazsa şuradan bsc [test](https://academy.binance.com/tr/articles/connecting-metamask-to-binance-smart-chain) ağını ekleyebilirsin.
+###  pergi ke Metamask dan pergi ke situs ini; https://test-staking.nulink.org/faucet
+**Jika Anda mau, impor dompet Anda ke metamask dengan kata-kata yang kami terima selama instalasi, atau Anda dapat melanjutkan dengan dompet apa pun..**
+### Mari kita beralih ke testnet BSC di metamask. (Jika tidak beralih sendiri saat Anda mencoba menyambung ke situs, bsc from [test](https://academy.binance.com/tr/articles/connecting-metamask-to-binance-smart-chain) Anda dapat menambahkan jaringan Anda..
 
-### Ardından BSC test ağına test token alalım ve bsc test token geldikten sonra nlk token da alalım faucetten.
+### Kemudian, mari kita dapatkan token tes ke testnet BSC, dan setelah token tes bsc tiba, mari kita dapatkan token nlk dari faucet.
 
 ![image](https://user-images.githubusercontent.com/107190154/190427147-1447808c-0518-4880-8467-ce5da67b5e0e.png)
 
-### Şimdi `Staking` kısmına gelelim. Şimdi aldığımız nlk tokenleri stake edeceğiz.
+### Sekarang mari kita masuk ke bagian 'Staking'. Sekarang kita akan mempertaruhkan token nlk yang kita terima.
 
 ![image](https://user-images.githubusercontent.com/107190154/190427972-b6543a26-662e-4833-b48d-16132ec17a45.png)
 
-### Nlk tokenleri stake edelim.
+### Mari staking token Nlk.
 
 ![image](https://user-images.githubusercontent.com/107190154/190428750-73b8c80b-891e-4db7-bbff-f3d0a9f8c946.png)
 
-### `Confirm` diyelim.
+### `Confirm` .
 
 ![image](https://user-images.githubusercontent.com/107190154/190429119-fa098247-ca9d-421e-8168-76529b3cdeec.png)
 
-### Tokenlerimizi stake ettikten sonra şimdi `bond` işlemi yapacağız. `Bond Worker` butonuna basalım.
+### Setelah staking,  sekarang akan 'bond'. Mari kita tekan tombol 'Bond Worker'.
 
 ![image](https://user-images.githubusercontent.com/107190154/190430550-6c5daa38-6601-47b9-8bcd-e6935b387093.png)
 
-### Şimdi karşımıza gelen ekranda doldurmamız gereken yerler var.
+### Sekarang ada bidang yang perlu kita isi di layar yang muncul.
 
-### Worker adres az önce node kurarken oluşan public adresimiz, worker adres kısmına onu yazıyoruz.
+### Alamat pekerja adalah alamat publik kami yang dibuat saat menyiapkan simpul, kami menulisnya di bagian alamat pekerja.
 
-### Node Url kısmına da şu şekilde yazacağız. **https://sunucuip:9151**
-### örneğin: https://123.45.678:9151
+### Kami akan menulis bagian Node Url sebagai berikut. **https://ipserver:9151**
+### Contoh: https://123.45.678:9151
 
-### Sonra confirm butonuna basıp cüzdanımıza gelen işlemi onaylayalım.
+### Kemudian, mari kita tekan tombol konfirmasi dan konfirmasi transaksi yang masuk ke dompet kita.
 
 ![image](https://user-images.githubusercontent.com/107190154/190434229-ab890d36-4444-4d7b-8bec-a6abe1f66a0c.png)
 
-### Bu işlemi yaptıktan sonra artık `online` şekilde gözükecektir, node'unuz.
+### Setelah melakukan proses ini, sekarang akan muncul sebagai `online`, node Anda.
 
 ![fnfnfn](https://user-images.githubusercontent.com/107190154/190434841-27277e1a-7c24-4941-953e-92a83f83ee6f.png)
 
-### Not: Sitede node online olup sonradan offline gözükürse endişelenmeyin, siteden kaynaklı bir durum.
+### Catatan: Jika node online di situs dan kemudian muncul offline, jangan khawatir, ini adalah situasi terkait situs.
 
-### İşlemler bu kadardı, yapılması gereken her şeyi yaptık. Hepinize kolay gelsin.
+### Itu saja, kami telah melakukan semua yang perlu dilakukan. Semoga sukses untuk Anda semua.
 
-### Herhangi bir sorun ya da hata alırsanız bana telegramdan ya da discorddan ulabilirsiniz.
+### Jika Anda mendapatkan masalah atau kesalahan, Anda dapat menghubungi saya di telegram atau discord.
 
 ## [Nulink Türkiye Telegram Kanalı](https://t.me/NuLink_Turkey)
 ## [Nulink Discord Kanalı](https://discord.gg/wGvjRWtw)
